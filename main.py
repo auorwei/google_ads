@@ -6,6 +6,7 @@ Google SERP广告抓取工具
 
 import sys
 import argparse
+import traceback
 from datetime import datetime
 from scraper import GoogleSERPScraper
 from database import AdDatabase
@@ -205,4 +206,5 @@ if __name__ == "__main__":
         sys.exit(1)
     except Exception as e:
         print(f"\n❌ 程序异常: {str(e)}")
+        traceback.print_exc()
         sys.exit(1)
