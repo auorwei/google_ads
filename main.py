@@ -10,7 +10,9 @@ import traceback
 from datetime import datetime
 from scraper import GoogleSERPScraper
 from database import AdDatabase
-from config import KEYWORDS_LIST, COUNTRY_LIST
+from email_sender import EmailSender
+from config import KEYWORDS_LIST, COUNTRY_LIST, EMAIL_CONFIG
+from logger import project_logger
 
 
 def main():
@@ -77,6 +79,9 @@ def main():
         
         scraper.scrape_single(args.keyword, args.country)
         
+        # 单次抓取完成后也发送邮件
+        send_scrape_result_email(scraper)
+        
     elif args.mode == 'batch':
         print("🚀 批量抓取模式")
         print(f"将抓取 {len(KEYWORDS_LIST)} 个关键词 × {len(COUNTRY_LIST)} 个国家 = {len(KEYWORDS_LIST) * len(COUNTRY_LIST)} 个组合")
@@ -88,6 +93,9 @@ def main():
             return
         
         scraper.scrape_all_combinations()
+        
+        # 抓取完成后自动发送邮件
+        send_scrape_result_email(scraper)
 
 
 def show_config():
@@ -196,6 +204,43 @@ def export_data(filename):
         print(f"❌ 导出失败: {str(e)}")
     
     conn.close()
+
+
+def send_scrape_result_email(scraper):
+    """发送抓取结果邮件到272363364@qq.com"""
+    logger = project_logger.get_logger('main_email', 'main_email.log')
+    
+    try:
+        logger.info("🚀 开始发送抓取结果邮件")
+        
+        # 创建邮件发送器
+        email_sender = EmailSender()
+        
+        # 获取统计信息
+        stats = scraper.db.get_scrape_stats()
+        
+        # 构建邮件主题
+        current_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        subject = f"[抓取完成] Google广告数据抓取结果 - {current_time}"
+        
+        # 发送邮件给272363364@qq.com
+        recipients = ["272363364@qq.com"]
+        
+        success = email_sender.send_email(
+            subject=subject,
+            recipients=recipients
+        )
+        
+        if success:
+            logger.info(f"✅ 抓取结果邮件发送成功: {', '.join(recipients)}")
+            print(f"📧 抓取结果邮件已发送到: {', '.join(recipients)}")
+        else:
+            logger.error("❌ 抓取结果邮件发送失败")
+            print("❌ 抓取结果邮件发送失败")
+            
+    except Exception as e:
+        logger.error(f"❌ 发送抓取结果邮件异常: {str(e)}")
+        print(f"❌ 发送抓取结果邮件失败: {str(e)}")
 
 
 if __name__ == "__main__":
