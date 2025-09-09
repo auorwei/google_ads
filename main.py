@@ -87,15 +87,15 @@ def main():
         print(f"将抓取 {len(KEYWORDS_LIST)} 个关键词 × {len(COUNTRY_LIST)} 个国家 = {len(KEYWORDS_LIST) * len(COUNTRY_LIST)} 个组合")
         
         # 询问用户确认
-        confirm = input("是否继续? (y/n): ").lower().strip()
-        if confirm != 'y':
-            print("已取消")
-            return
+      #  confirm = input("是否继续? (y/n): ").lower().strip()
+      #  if confirm != 'y':
+      #      print("已取消")
+      #ß      return
         
         scraper.scrape_all_combinations()
         
         # 抓取完成后自动发送邮件
-        send_scrape_result_email(scraper)
+        send_scrape_result_email(scraper)ßß
 
 
 def show_config():

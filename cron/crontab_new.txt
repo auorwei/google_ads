@@ -1,0 +1,31 @@
+# Google广告监控系统 - 定时任务配置
+# 
+# 使用说明:
+# 1. 将项目部署到服务器
+# 2. 修改下面脚本中的路径
+# 3. 给脚本添加执行权限: chmod +x cron/*.sh
+# 4. 执行: crontab cron/crontab_new.txt
+#
+# 时间格式: 分 时 日 月 周 (0=周日, 1=周一...)
+
+# 项目根目录 - 请修改为服务器上的实际路径
+PROJECT_PATH=/Users/w/Documents/code/google_ads
+
+# ============ 定时任务配置 ============
+
+# 任务1: 每小时运行main.py (每小时的第0分钟)
+0 * * * * $PROJECT_PATH/cron/run_hourly.sh
+
+# 任务2: 每天下午6点运行email_daily.py  
+0 18 * * * $PROJECT_PATH/cron/run_daily_email.sh
+
+# 任务3: 每周一早上9点运行email_weekly.py
+0 9 * * 1 $PROJECT_PATH/cron/run_weekly_email.sh
+
+# ============ 维护任务 (可选) ============
+
+# 每天凌晨2点清理30天前的HTML文件
+0 2 * * * find $PROJECT_PATH/htmls -name "*.html" -mtime +30 -delete 2>/dev/null
+
+# 每周日凌晨3点备份数据库
+0 3 * * 0 cd $PROJECT_PATH && mkdir -p backups && cp google_ads.db backups/google_ads_$(date +\%Y\%m\%d).db 2>/dev/null
