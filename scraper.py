@@ -123,8 +123,8 @@ class GoogleSERPScraper:
             
             # 如果不是最后一次尝试，等待一段时间后重试
             if attempt < MAX_RETRIES - 1:
-                print(f"  等待 {RETRY_DELAY} 秒后重试...")
-                time.sleep(RETRY_DELAY)
+                print(f"  等待 5 秒后重试...")
+                time.sleep(5)
         
         return None
     
@@ -202,8 +202,8 @@ class GoogleSERPScraper:
                 
                 # 在请求之间添加延迟，避免被限制
                 if current < total_combinations:
-                    print(f"  ⏳ 等待 {RETRY_DELAY} 秒...")
-                    time.sleep(RETRY_DELAY)
+                    print(f"  ⏳ 等待 2 秒...")
+                    time.sleep(2)
         
         end_time = datetime.now()
         duration = end_time - start_time
