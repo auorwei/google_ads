@@ -142,15 +142,12 @@ class EmailSender:
             title = title or '无标题'
             country_name = self._get_country_name(country)
             
-            # 限制URL长度显示
-            display_url = real_url if len(real_url) <= 80 else real_url[:77] + '...'
-            
             html_content += f"""                <tr>
                     <td><code>{ref_param}</code></td>
                     <td><strong>{keyword}</strong></td>
                     <td class="timestamp">{formatted_time}</td>
                     <td class="url-link">
-                        <a href="{real_url}" target="_blank" title="{real_url}">{display_url}</a>
+                        <a href="{real_url}" target="_blank" title="{real_url}">链接</a>
                     </td>
                     <td>{title}</td>
                     <td>{country_name}</td>
