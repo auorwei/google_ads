@@ -1,4 +1,5 @@
 import sqlite3
+import os
 from datetime import datetime
 from config import DATABASE_NAME
 
@@ -7,7 +8,15 @@ class AdDatabase:
     """Google广告数据库管理类"""
     
     def __init__(self):
-        self.db_path = DATABASE_NAME
+        # 将相对路径转换为绝对路径，确保无论从哪个目录运行都能找到数据库
+        if os.path.isabs(DATABASE_NAME):
+            # 如果已经是绝对路径，直接使用
+            self.db_path = DATABASE_NAME
+        else:
+            # 如果是相对路径，基于项目根目录计算绝对路径
+            project_root = os.path.dirname(os.path.abspath(__file__))
+            self.db_path = os.path.join(project_root, DATABASE_NAME)
+        
         self.init_database()
     
     def init_database(self):

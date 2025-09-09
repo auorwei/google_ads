@@ -19,7 +19,14 @@ class RefStatsAnalyzer:
     """Ref参数统计分析器"""
     
     def __init__(self):
-        self.db_path = DATABASE_NAME
+        # 将相对路径转换为绝对路径，确保无论从哪个目录运行都能找到数据库
+        if os.path.isabs(DATABASE_NAME):
+            self.db_path = DATABASE_NAME
+        else:
+            # 基于项目根目录计算数据库绝对路径
+            project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+            self.db_path = os.path.join(project_root, DATABASE_NAME)
+        
         self.logger = project_logger.get_logger('ref_stats', 'ref_stats.log')
     
     def get_today_refs(self):
@@ -174,7 +181,7 @@ class RefStatsAnalyzer:
                 f.write(f"# 唯一Ref参数数量: {stats['total_unique_refs']} 个\n")
                 f.write(f"# 生成时间: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n")
                 
-                for ref_param, keyword, first_discovered, real_url, title, country, count in stats['refs_data']:
+                for ref_param, _, _, _, _, _, _ in stats['refs_data']:
                     f.write(f"{ref_param}\n")
             
             print(f"✅ {stats['period']}的Ref参数已导出到: {filename}")
