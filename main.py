@@ -80,7 +80,7 @@ def main():
         scraper.scrape_single(args.keyword, args.country)
         
         # 单次抓取完成后也发送邮件
-        send_scrape_result_email(scraper)
+       # send_scrape_result_email(scraper)
         
     elif args.mode == 'batch':
         print("🚀 批量抓取模式")
