@@ -95,7 +95,7 @@ def main():
         scraper.scrape_all_combinations()
         
         # 抓取完成后自动发送邮件
-        send_scrape_result_email(scraper)
+       # send_scrape_result_email(scraper)
 
 
 def show_config():
