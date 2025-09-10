@@ -6,6 +6,7 @@
 
 import smtplib
 import sqlite3
+import os
 from datetime import datetime, timedelta
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
@@ -34,7 +35,14 @@ class EmailSender:
             start_date: 开始日期（datetime对象）
             end_date: 结束日期（datetime对象）
         """
-        conn = sqlite3.connect(DATABASE_NAME)
+        # 使用绝对路径确保cron运行时也能找到正确的数据库
+        if os.path.isabs(DATABASE_NAME):
+            db_path = DATABASE_NAME
+        else:
+            project_root = os.path.dirname(os.path.abspath(__file__))
+            db_path = os.path.join(project_root, DATABASE_NAME)
+        
+        conn = sqlite3.connect(db_path)
         cursor = conn.cursor()
         
         # 确定查询的时间范围
